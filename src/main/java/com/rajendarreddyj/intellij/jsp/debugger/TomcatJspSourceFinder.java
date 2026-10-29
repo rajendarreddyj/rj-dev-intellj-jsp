@@ -1,9 +1,10 @@
 package com.rajendarreddyj.intellij.jsp.debugger;
 
 import com.intellij.debugger.engine.SourcesFinder;
-import com.intellij.openapi.application.ReadAction;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -28,7 +29,8 @@ public class TomcatJspSourceFinder implements SourcesFinder<Project> {
             return null;
         }
         // JSR45PositionManager calls this from debugger threads without holding a read lock.
-        return ReadAction.compute(() -> project.isDisposed() ? null : doFindSourceFile(relPath, project, scope));
+        return ApplicationManager.getApplication().runReadAction((Computable<PsiFile>) () ->
+                project.isDisposed() ? null : doFindSourceFile(relPath, project, scope));
     }
 
     private static @Nullable PsiFile doFindSourceFile(String relPath, Project project, @Nullable Project scope) {

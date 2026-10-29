@@ -32,9 +32,12 @@ Standalone IntelliJ IDEA **Community** plugin adding JSP/JSPX editing support an
 
 | IDE | Build | Plugin Verifier | Tests |
 |-----|-------|-----------------|-------|
-| IntelliJ IDEA Community 2024.2.6 | 242 | Compatible | 48 pass |
-| IntelliJ IDEA 2025.3 | 253 | Compatible | not run |
-| IntelliJ IDEA 2026.2.3 | 262 | Compatible (2 deprecated-API notes) | 48 pass |
+| IntelliJ IDEA Community 2024.2.6 | 242 | Compatible | CI |
+| IntelliJ IDEA 2025.3 | 253 | Compatible (4 deprecated API usages) | CI |
+| IntelliJ IDEA 2026.2.3 | 262 | Compatible (legacy API notes required for 242 support) | Local run: 76 pass, 1 skipped |
+| Latest stable IDEA | Resolved at runtime | Plugin Verifier targets above are fixed | CI on every run |
+
+CI tests the 2024.2.6 baseline, IDEA 2025.3, and the latest stable IDEA version returned by JetBrains on every run. Plugin verification remains pinned to the IDE builds above.
 
 ## Build and install
 

@@ -4,8 +4,10 @@ import com.intellij.debugger.NoDataException;
 import com.intellij.debugger.engine.DebugProcess;
 import com.intellij.debugger.engine.JSR45PositionManager;
 import com.intellij.debugger.engine.SourcesFinder;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiFile;
 import com.rajendarreddyj.intellij.jsp.language.JspFileType;
 import com.sun.jdi.AbsentInformationException;
@@ -61,8 +63,9 @@ public class TomcatJspPositionManager extends JSR45PositionManager<Project> {
 
     private String describeRoots() {
         try {
-            return com.intellij.openapi.application.ReadAction.compute(() -> JspSourceRootDiscovery.discoverRoots(myDebugProcess.getProject()).stream()
-                    .map(com.intellij.openapi.vfs.VirtualFile::getPath).toList().toString());
+            return ApplicationManager.getApplication().runReadAction((Computable<String>) () ->
+                    JspSourceRootDiscovery.discoverRoots(myDebugProcess.getProject()).stream()
+                            .map(com.intellij.openapi.vfs.VirtualFile::getPath).toList().toString());
         } catch (RuntimeException e) {
             return "(unavailable: " + e + ")";
         }
