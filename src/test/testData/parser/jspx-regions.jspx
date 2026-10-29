@@ -1,0 +1,5 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.3">
+<jsp:directive.taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"/>
+<jsp:directive.taglib uri="jakarta.tags.fmt" prefix="jfmt"/>
+<jsp:text>Value: </jsp:text>${bean.value}
+</jsp:root>

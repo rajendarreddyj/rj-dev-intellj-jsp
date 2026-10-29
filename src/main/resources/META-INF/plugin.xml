@@ -1,0 +1,86 @@
+<idea-plugin>
+    <id>com.rajendarreddyj.intellij.jsp</id>
+    <name>JSP Community Support</name>
+    <vendor email="rajendarreddyj+intellij-jsp@gmail.com">Rajendarreddy Jagapathi</vendor>
+    <description><![CDATA[
+        <p>JSP/JSPF/JSPX support for IntelliJ IDEA Community Edition.</p>
+        <ul>
+            <li>Syntax highlighting for directives, scriptlets, expressions, EL, JSP tags, HTML and JavaScript</li>
+            <li>Java code insight inside scriptlets, with <code>include</code> and <code>page import</code> resolution</li>
+            <li>Navigation for includes, imports and tag libraries</li>
+            <li>JSR-45 line breakpoints for Tomcat/Jasper pages (works with SmartTomcat; Tomcat 9, 10.1, 11)</li>
+        </ul>
+        <p>Not compatible with IntelliJ IDEA Ultimate, which bundles its own JSP support.</p>
+    ]]></description>
+    <change-notes><![CDATA[
+        <b>0.4.5</b>: quieter debug logging (traces opt-in via -Djsp.community.debug.trace=true).<br/>
+        <b>0.4.4</b>: fix JSP breakpoints not being installed (missing breakpoint handler).<br/>
+        <b>0.4.3</b>: fix breakpoints when a packaged copy of the web app (target/) exists.<br/>
+        <b>0.4.2</b>: richer debugger diagnostics.<br/>
+        <b>0.4.1</b>: performance fix (cached web-root discovery).<br/>
+        <b>0.4.0</b>: include rename/find usages, unresolved-import warning, nearest includer, EL chain resolution, debugger evaluate/watch, SmartTomcat work dir.<br/>
+        <b>0.3.0</b>: TLD-based tag attribute completion and validation.<br/>
+        <b>0.2.0</b>: PSI-based tag-prefix check honoring includes, tagdir and xmlns; add-taglib quick fix; unified web-root discovery; .tag/.tagx files; folding and structure view; faster completion and TLD caching.<br/>
+        <b>0.1.1</b>: debug console diagnostics for JSP breakpoints; nested-class SMAP false positive fixed; non-standard webapp root lookup; Ctrl+Click on includes and imports.<br/>
+        <b>0.1.0</b>: initial release with highlighting, code insight, references and JSR-45 JSP breakpoints.
+    ]]></change-notes>
+
+    <!-- Ultimate bundles its own JSP language (same ID "JSP") and file type, so the two cannot coexist. -->
+    <incompatible-with>com.intellij.modules.ultimate</incompatible-with>
+
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.xml</depends>
+    <depends>com.intellij.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType
+                name="JSP/JSPX"
+                language="JSP"
+                implementationClass="com.rajendarreddyj.intellij.jsp.language.JspFileType"
+                fieldName="INSTANCE"
+                extensions="jsp;jspf;jspx;tag;tagx"/>
+        <fileTypeOverrider implementation="com.rajendarreddyj.intellij.jsp.language.JspxFileTypeOverrider"/>
+        <lang.parserDefinition
+                language="JSP"
+                implementationClass="com.rajendarreddyj.intellij.jsp.language.JspParserDefinition"/>
+        <lang.syntaxHighlighterFactory
+                language="JSP"
+                implementationClass="com.rajendarreddyj.intellij.jsp.language.JspSyntaxHighlighterFactory"/>
+        <editorHighlighterProvider
+                filetype="JSP/JSPX"
+                implementationClass="com.rajendarreddyj.intellij.jsp.language.JspEditorHighlighterProvider"/>
+        <lang.foldingBuilder language="JSP"
+                implementationClass="com.rajendarreddyj.intellij.jsp.language.JspFoldingBuilder"/>
+        <lang.findUsagesProvider language="JSP"
+                implementationClass="com.rajendarreddyj.intellij.jsp.language.JspFindUsagesProvider"/>
+        <lang.elementManipulator forClass="com.rajendarreddyj.intellij.jsp.language.JspRegionPsiElement"
+                implementationClass="com.rajendarreddyj.intellij.jsp.language.JspRegionManipulator"/>
+        <lang.psiStructureViewFactory language="JSP"
+                implementationClass="com.rajendarreddyj.intellij.jsp.language.JspStructureViewFactory"/>
+        <colorSettingsPage implementation="com.rajendarreddyj.intellij.jsp.language.JspColorSettingsPage"/>
+        <completion.contributor
+                language="JSP"
+                implementationClass="com.rajendarreddyj.intellij.jsp.insight.JspCompletionContributor"/>
+        <psi.referenceContributor
+                language="JSP"
+                implementation="com.rajendarreddyj.intellij.jsp.insight.JspReferenceContributor"/>
+        <annotator
+                language="JSP"
+                implementationClass="com.rajendarreddyj.intellij.jsp.insight.JspAnnotator"/>
+        <multiHostInjector
+                implementation="com.rajendarreddyj.intellij.jsp.insight.JspMultiHostInjector"/>
+        <projectService
+                serviceImplementation="com.rajendarreddyj.intellij.jsp.debugger.JspSourceRootSettings"/>
+        <projectConfigurable
+                id="com.rajendarreddyj.intellij.jsp.debugger.sourceRoots"
+                displayName="JSP Source Roots"
+                instance="com.rajendarreddyj.intellij.jsp.debugger.JspSourceRootConfigurable"/>
+        <xdebugger.breakpointType implementation="com.rajendarreddyj.intellij.jsp.debugger.JspLineBreakpointType" />
+        <debugger.positionManagerFactory 
+                implementation="com.rajendarreddyj.intellij.jsp.debugger.TomcatJspPositionManagerFactory"/>
+        <debugger.javaBreakpointHandlerFactory
+                implementation="com.rajendarreddyj.intellij.jsp.debugger.JspBreakpointHandlerFactory"/>
+        <debugger.codeFragmentFactory order="first"
+                implementation="com.rajendarreddyj.intellij.jsp.debugger.JspCodeFragmentFactory"/>
+    </extensions>
+</idea-plugin>
