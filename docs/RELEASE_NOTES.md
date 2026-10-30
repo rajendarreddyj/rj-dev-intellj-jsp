@@ -2,7 +2,7 @@
 
 Newest first. Plugin ID `com.rajendarreddyj.intellij.jsp`; supports IntelliJ IDEA 2026.2 and newer (`sinceBuild` 262, no `untilBuild`).
 
-## Unreleased
+## 0.4.6 (2026-10-29)
 
 - Raised the minimum supported IntelliJ IDEA version to 2026.2 (build 262) and replaced debugger APIs deprecated before this baseline.
 

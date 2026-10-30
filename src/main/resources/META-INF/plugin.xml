@@ -13,6 +13,7 @@
         <p>Not compatible with IntelliJ IDEA Ultimate, which bundles its own JSP support.</p>
     ]]></description>
     <change-notes><![CDATA[
+        <b>0.4.6</b>: support IntelliJ IDEA 2026.2 and newer; modernize debugger APIs.<br/>
         <b>0.4.5</b>: quieter debug logging (traces opt-in via -Djsp.community.debug.trace=true).<br/>
         <b>0.4.4</b>: fix JSP breakpoints not being installed (missing breakpoint handler).<br/>
         <b>0.4.3</b>: fix breakpoints when a packaged copy of the web app (target/) exists.<br/>
