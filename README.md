@@ -27,17 +27,15 @@ Standalone IntelliJ IDEA **Community** plugin adding JSP/JSPX editing support an
 
 ## Requirements
 
-- IntelliJ IDEA 2024.2 or newer (`since-build 242`, no upper bound), including the unified IntelliJ IDEA 2025.3+ distribution. Requires the bundled Java plugin.
-- Gradle provisions the build JDK automatically (Foojay toolchain, default JDK 21). Output is Java 17 bytecode, so the plugin also loads on 2024.2.
+- IntelliJ IDEA 2026.2 or newer (`since-build 262`, no upper bound). Requires the bundled Java plugin.
+- Gradle provisions the build JDK automatically (Foojay toolchain, default JDK 25). Plugin output remains Java 17 bytecode.
 
 | IDE | Build | Plugin Verifier | Tests |
 |-----|-------|-----------------|-------|
-| IntelliJ IDEA Community 2024.2.6 | 242 | Compatible | CI |
-| IntelliJ IDEA 2025.3 | 253 | Compatible (4 deprecated API usages) | CI |
-| IntelliJ IDEA 2026.2.3 | 262 | Compatible (legacy API notes required for 242 support) | Local run: 76 pass, 1 skipped |
-| Latest stable IDEA | Resolved at runtime | Plugin Verifier targets above are fixed | CI on every run |
+| IntelliJ IDEA Community 2026.2.3 | 262 | CI verifier target | CI |
+| Latest stable IDEA | Resolved at runtime | Not separately pinned | CI on every run |
 
-CI tests the 2024.2.6 baseline, IDEA 2025.3, and the latest stable IDEA version returned by JetBrains on every run. Plugin verification remains pinned to the IDE builds above.
+CI tests the 2026.2.3 baseline and the latest stable IDEA version returned by JetBrains on every run. The latest release must be build 262 or newer; duplicate baseline jobs are omitted. Plugin verification is pinned to 2026.2.3.
 
 ## Build and install
 
@@ -45,15 +43,15 @@ CI tests the 2024.2.6 baseline, IDEA 2025.3, and the latest stable IDEA version 
 .\gradlew.bat test verifyPlugin buildPlugin
 ```
 
-`verifyPlugin` checks all three IDEs above. Install `build\distributions\intellij-jsp-<version>.zip` with **Settings | Plugins | ⚙ | Install Plugin from Disk...**. Use `.\gradlew.bat runIde` to try it in a sandbox IDE.
+`verifyPlugin` checks IntelliJ IDEA 2026.2.3. Install `build\distributions\intellij-jsp-<version>.zip` with **Settings | Plugins | ⚙ | Install Plugin from Disk...**. Use `.\gradlew.bat runIde` to try it in a sandbox IDE.
 
-To compile, test, or run against the latest IDE (2026.x needs JDK 25):
+To compile, test, or run against another supported IDE release:
 
 ```powershell
 .\gradlew.bat test runIde '-PplatformVersion=2026.2.3' '-PjavaToolchain=25' '-PuseInstaller=false'
 ```
 
-The defaults are `platformType=IntellijIdeaCommunity`, `platformVersion=2024.2.6`, `javaToolchain=21`, and `useInstaller=true`. Community builds from 2025.3 onward are Maven-only, so they need `useInstaller=false`.
+The defaults are `platformType=IntellijIdeaCommunity`, `platformVersion=2026.2.3`, `javaToolchain=25`, and `useInstaller=false` (Community builds from 2025.3 onward are Maven-only).
 
 ## Supported Tomcat versions
 

@@ -1,11 +1,14 @@
 package com.rajendarreddyj.intellij.jsp.insight;
 
+import com.intellij.debugger.engine.evaluation.CodeFragmentKind;
+import com.intellij.debugger.engine.evaluation.TextWithImportsImpl;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiCodeFragment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
@@ -107,6 +110,23 @@ public class JspJavaInjectionTest extends LightJavaCodeInsightFixtureTestCase {
         }
         assertTrue(new com.rajendarreddyj.intellij.jsp.debugger.JspCodeFragmentFactory().isContextAccepted(file.getFirstChild()));
     }
+
+    public void testDebuggerPsiFragmentsUseTranslatedJavaContext() {
+        PsiFile file = myFixture.configureByText("fragment.jsp", "<% String local = request.getParameter(\"q\"); %>");
+        PsiElement expectedContext = JspEvaluationContext.javaContextFor(file);
+        PsiElement jspContext = file.getFirstChild();
+        var factory = new com.rajendarreddyj.intellij.jsp.debugger.JspCodeFragmentFactory();
+        var input = new TextWithImportsImpl(CodeFragmentKind.EXPRESSION, "local.length()");
+
+        PsiCodeFragment expression = factory.createPsiCodeFragment(input, jspContext, getProject());
+        PsiCodeFragment presentation = factory.createPresentationPsiCodeFragment(input, jspContext, getProject());
+
+        assertNotNull(expression);
+        assertNotNull(presentation);
+        assertSame(expectedContext, expression.getContext());
+        assertSame(expectedContext, presentation.getContext());
+    }
+
     public void testUndefinedSymbolsStayUnresolved() {
         PsiFile file = myFixture.configureByText("bad.jsp", "<% int ok = 1; %><% missingVariable.toString(); ok++; %>");
         assertResolved(file, "ok");

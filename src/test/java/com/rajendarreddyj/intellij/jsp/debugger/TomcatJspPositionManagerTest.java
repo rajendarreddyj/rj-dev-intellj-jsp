@@ -10,12 +10,14 @@ import com.intellij.debugger.engine.managerThread.DebuggerManagerThread;
 import com.intellij.debugger.requests.RequestManager;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.process.ProcessHandler;
+import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.util.containers.ContainerUtil;
+import com.rajendarreddyj.intellij.jsp.language.JspFileType;
 import com.sun.jdi.ArrayReference;
 import com.sun.jdi.ArrayType;
 import com.sun.jdi.ClassLoaderReference;
@@ -30,6 +32,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TomcatJspPositionManagerTest extends BasePlatformTestCase {
+    public void testAcceptsOnlyJspFileType() {
+        TomcatJspPositionManager manager = new TomcatJspPositionManager(new FakeDebugProcess(getProject()));
+
+        assertTrue(manager.isAcceptedFileType(JspFileType.INSTANCE));
+        assertFalse(manager.isAcceptedFileType(JavaFileType.INSTANCE));
+    }
+
     public void testNestedClassesFromDeclarationsAreNotExpectedToCarrySmap() {
         String pkg = "org.apache.jsp";
         assertTrue(TomcatJspPositionManager.isGeneratedPageClass("org.apache.jsp.admin.CustomListEdit_jsp", pkg));

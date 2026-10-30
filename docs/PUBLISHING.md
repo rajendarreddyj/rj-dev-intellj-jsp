@@ -14,7 +14,7 @@
 
 ## Each release
 1. Bump `version` in `build.gradle.kts`; update `docs/RELEASE_NOTES.md` and the `<change-notes>` in `plugin.xml`.
-2. `.\gradlew.bat test verifyPlugin` (verifies against 2024.2.6, 2025.3 and 2026.2.3).
+2. `.\gradlew.bat test verifyPlugin` (tests and verifies against IntelliJ IDEA 2026.2.3, the minimum supported release).
 3. `.\gradlew.bat signPlugin` creates `build/distributions/intellij-jsp-<version>-signed.zip`.
 4. First release: upload the zip manually at https://plugins.jetbrains.com/plugin/add (needs moderation approval).
    Later releases: `.\gradlew.bat publishPlugin`.

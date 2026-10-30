@@ -7,7 +7,7 @@ import com.intellij.debugger.engine.evaluation.expression.EvaluatorBuilder;
 import com.intellij.debugger.engine.evaluation.expression.EvaluatorBuilderImpl;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.JavaCodeFragment;
+import com.intellij.psi.PsiCodeFragment;
 import com.intellij.psi.PsiElement;
 import com.rajendarreddyj.intellij.jsp.insight.JspEvaluationContext;
 import com.rajendarreddyj.intellij.jsp.language.JspLanguage;
@@ -21,13 +21,14 @@ public final class JspCodeFragmentFactory extends CodeFragmentFactory {
     private final DefaultCodeFragmentFactory delegate = DefaultCodeFragmentFactory.getInstance();
 
     @Override
-    public JavaCodeFragment createCodeFragment(@NotNull TextWithImports item, PsiElement context, @NotNull Project project) {
-        return delegate.createCodeFragment(item, javaContext(context), project);
+    public PsiCodeFragment createPsiCodeFragment(@NotNull TextWithImports item, PsiElement context, @NotNull Project project) {
+        return delegate.createPsiCodeFragment(item, javaContext(context), project);
     }
 
     @Override
-    public JavaCodeFragment createPresentationCodeFragment(@NotNull TextWithImports item, PsiElement context, @NotNull Project project) {
-        return delegate.createPresentationCodeFragment(item, javaContext(context), project);
+    public PsiCodeFragment createPresentationPsiCodeFragment(
+            @NotNull TextWithImports item, PsiElement context, @NotNull Project project) {
+        return delegate.createPresentationPsiCodeFragment(item, javaContext(context), project);
     }
 
     @Override

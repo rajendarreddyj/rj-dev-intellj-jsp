@@ -11,9 +11,8 @@ version = "0.4.5"
 
 java {
     toolchain {
-        // Toolchain must be >= the target IDE's bytecode level (2024.2: 17, 2025.x: 21, 2026.x: 25).
-        // Output stays Java 17 bytecode so the plugin still loads on 2024.2 (sinceBuild 242).
-        languageVersion = JavaLanguageVersion.of(providers.gradleProperty("javaToolchain").getOrElse("21").toInt())
+        // The IntelliJ 2026.2 platform requires JDK 25; plugin output remains Java 17 bytecode.
+        languageVersion = JavaLanguageVersion.of(providers.gradleProperty("javaToolchain").getOrElse("25").toInt())
     }
 }
 
@@ -21,9 +20,9 @@ tasks.withType<JavaCompile>().configureEach {
     options.release = 17
 }
 
-// Override with -PplatformType=IntellijIdea -PplatformVersion=2026.2.3 -PjavaToolchain=25 to build/test against a newer IDE.
+// Override these properties to build or test against another supported IDE release.
 val platformType = providers.gradleProperty("platformType").getOrElse("IntellijIdeaCommunity")
-val platformVersion = providers.gradleProperty("platformVersion").getOrElse("2024.2.6")
+val platformVersion = providers.gradleProperty("platformVersion").getOrElse("2026.2.3")
 
 repositories {
     mavenCentral()
@@ -34,9 +33,9 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        // IntelliJ 2025.3+ Community builds are only published as Maven artifacts: add -PuseInstaller=false.
+        // IntelliJ 2025.3+ Community builds are only published as Maven artifacts.
         create(IntelliJPlatformType.valueOf(platformType), platformVersion) {
-            useInstaller = providers.gradleProperty("useInstaller").map { it.toBoolean() }.getOrElse(true)
+            useInstaller = providers.gradleProperty("useInstaller").map { it.toBoolean() }.getOrElse(false)
         }
         bundledPlugin("com.intellij.java")
         testFramework(TestFrameworkType.Platform)
@@ -55,8 +54,8 @@ dependencies {
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "242"
-            // Open-ended: compatible with every release from 2024.2 onward (verified up to 2026.2).
+            sinceBuild = "262"
+            // Open-ended: compatible with every release from IntelliJ IDEA 2026.2 onward.
             untilBuild = provider { null }
         }
     }
@@ -71,9 +70,7 @@ intellijPlatform {
     }
     pluginVerification {
         ides {
-            create(IntelliJPlatformType.IntellijIdeaCommunity, "2024.2.6")
-            create(IntelliJPlatformType.IntellijIdea, "2025.3")
-            create(IntelliJPlatformType.IntellijIdea, "2026.2.3")
+            create(IntelliJPlatformType.IntellijIdeaCommunity, "2026.2.3")
         }
         freeArgs = listOf("-mute", "TemplateWordInPluginId")
     }

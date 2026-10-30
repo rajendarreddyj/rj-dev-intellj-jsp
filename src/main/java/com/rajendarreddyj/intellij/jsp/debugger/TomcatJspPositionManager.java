@@ -5,7 +5,7 @@ import com.intellij.debugger.engine.DebugProcess;
 import com.intellij.debugger.engine.JSR45PositionManager;
 import com.intellij.debugger.engine.SourcesFinder;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiFile;
@@ -23,7 +23,6 @@ public class TomcatJspPositionManager extends JSR45PositionManager<Project> {
     private static final com.intellij.openapi.diagnostic.Logger LOG =
             com.intellij.openapi.diagnostic.Logger.getInstance(TomcatJspPositionManager.class);
     static final String JSP_STRATUM = "JSP";
-    private static final LanguageFileType[] ACCEPTED_FILE_TYPES = {JspFileType.INSTANCE};
 
     private final MetadataReporter metadataReporter;
     private final Set<String> tracedKeys = ConcurrentHashMap.newKeySet();
@@ -55,10 +54,15 @@ public class TomcatJspPositionManager extends JSR45PositionManager<Project> {
             @NotNull SourcesFinder<Project> sourcesFinder,
             @NotNull MetadataReporter metadataReporter
     ) {
-        super(debugProcess, debugProcess.getProject(), JSP_STRATUM, ACCEPTED_FILE_TYPES, sourcesFinder);
+        super(debugProcess, debugProcess.getProject(), JSP_STRATUM, sourcesFinder);
         this.metadataReporter = metadataReporter;
         traceOnce("start", "JSP position manager active for generated package '" + getGeneratedClassesPackage()
                 + "'; web roots " + describeRoots());
+    }
+
+    @Override
+    public boolean isAcceptedFileType(@NotNull FileType fileType) {
+        return JspFileType.INSTANCE.equals(fileType);
     }
 
     private String describeRoots() {
